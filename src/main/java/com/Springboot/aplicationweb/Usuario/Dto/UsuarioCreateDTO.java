@@ -9,6 +9,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/* Esta clase se usa en el controller, dentro de ResponseEntity o se puede usar
+   solo el DTO */
+
+// Para crear un nuevo usuario deben usar esta clase DTO
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
