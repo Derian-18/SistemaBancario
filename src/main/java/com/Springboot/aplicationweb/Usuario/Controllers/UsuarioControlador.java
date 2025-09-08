@@ -5,14 +5,15 @@ import com.Springboot.aplicationweb.Usuario.Dto.UsuarioUpdateDTO;
 import com.Springboot.aplicationweb.Usuario.Model.Usuarios;
 import com.Springboot.aplicationweb.Usuario.Servicios.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
-import jdk.jfr.Description;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -33,7 +34,7 @@ public class UsuarioControlador {
 
     // Aqui buscamos un usuario por el id
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> buscar(@PathVariable int id){
+    public ResponseEntity<UsuarioResponseDTO> buscar(@Valid @PathVariable int id){
         return serv_usuario.BuscarId(id)
                 .map(usuario -> new UsuarioResponseDTO(
                         usuario.getUsuarioId(),
@@ -47,7 +48,7 @@ public class UsuarioControlador {
 
     // Aqui crearemos un usuario
     @PostMapping
-    public ResponseEntity<UsuarioCreateDTO> crearUsuario(@RequestBody UsuarioCreateDTO usuariodto){
+    public ResponseEntity<UsuarioCreateDTO> crearUsuario(@Valid @RequestBody UsuarioCreateDTO usuariodto){
         Usuarios insertar = serv_usuario.Crear(usuariodto);
         UsuarioCreateDTO respDTO = new UsuarioCreateDTO(
                 insertar.getNombre(),
@@ -58,7 +59,7 @@ public class UsuarioControlador {
 
     // Aqui actualizaremos un usuario
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioUpdateDTO> actualizarUsuario(@PathVariable int id, @RequestBody UsuarioUpdateDTO usuariodto){
+    public ResponseEntity<UsuarioUpdateDTO> actualizarUsuario(@Valid @PathVariable int id, @RequestBody UsuarioUpdateDTO usuariodto){
         return serv_usuario.Actualizar(id, usuariodto)
                 .map(u -> new UsuarioUpdateDTO(u.getNombre(), u.getApellido(),u.getCorreo()))
                 .map(ResponseEntity::ok)
