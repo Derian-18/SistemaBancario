@@ -22,7 +22,7 @@ public class UsuarioControlador {
     @Autowired
     private UsuarioService serv_usuario;
 
-    // Aquí se puede usar la clase DTO o usar ResponseEntity o usar los dos al mimso tiempo
+    // Aquí se puede usar la clase DTO o usar ResponseEntity o usar los dos al mismo tiempo
 
     // Este GetMapping hace que se muestren todos los usuarios mediante el ResponseDTO
     @GetMapping
