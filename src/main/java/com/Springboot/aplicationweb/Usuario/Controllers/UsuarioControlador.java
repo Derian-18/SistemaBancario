@@ -46,17 +46,6 @@ public class UsuarioControlador {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Aqui crearemos un usuario
-    @PostMapping
-    public ResponseEntity<UsuarioCreateDTO> crearUsuario(@Valid @RequestBody UsuarioCreateDTO usuariodto){
-        Usuarios insertar = serv_usuario.Crear(usuariodto);
-        UsuarioCreateDTO respDTO = new UsuarioCreateDTO(
-                insertar.getNombre(),
-                insertar.getApellido(),
-                insertar.getCorreo());
-        return ResponseEntity.status(HttpStatus.CREATED).body(respDTO);
-    }
-
     // Aqui actualizaremos un usuario
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioUpdateDTO> actualizarUsuario(@Valid @PathVariable int id, @RequestBody UsuarioUpdateDTO usuariodto){
