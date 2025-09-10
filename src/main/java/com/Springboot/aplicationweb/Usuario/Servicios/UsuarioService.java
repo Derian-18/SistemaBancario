@@ -1,10 +1,10 @@
 package com.Springboot.aplicationweb.Usuario.Servicios;
 
-import com.Springboot.aplicationweb.Usuario.Dto.UsuarioCreateDTO;
-import com.Springboot.aplicationweb.Usuario.Dto.UsuarioUpdateDTO;
+import com.Springboot.aplicationweb.Usuario.Dto.*;
 import com.Springboot.aplicationweb.Usuario.Model.Usuarios;
 import com.Springboot.aplicationweb.Usuario.Repositorios.UsuariosRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +17,10 @@ public class UsuarioService {
     @Autowired
     private UsuariosRepositorio repo_usuarios;
 
+    // Lo siguiente sirve para encriptar las contrasenias lo cual se hara uso de esto despues
+//    @Autowired
+//    prívate PasswordEncoder contraseniaEncoder;
+
     public List<Usuarios> ListaUsuarios(){
         return repo_usuarios.findAll();
     }
@@ -25,11 +29,13 @@ public class UsuarioService {
         return repo_usuarios.findById(id);
     }
 
-    public Usuarios Crear(UsuarioCreateDTO usuario){
+    // Este se va a usar para registro de usuarios
+    public Usuarios Crear(UsuarioRegisterDTO usuario){
         Usuarios u = new Usuarios();
         u.setNombre(usuario.getNombre());
         u.setApellido(usuario.getApellido());
         u.setCorreo(usuario.getCorreo());
+        u.setContrasenia(usuario.getContrasenia());
         return repo_usuarios.save(u);
     }
 
@@ -38,11 +44,37 @@ public class UsuarioService {
             usuarioExiste.setNombre(actualiza.getNombre());
             usuarioExiste.setApellido(actualiza.getApellido());
             usuarioExiste.setCorreo(actualiza.getCorreo());
+            usuarioExiste.setContrasenia(actualiza.getContrasenia());
             return repo_usuarios.save(usuarioExiste);
         });
     }
 
     public void Eliminar(int id){
         repo_usuarios.deleteById(id);
+    }
+
+    // Aqui ira el metodo para poder iniciar sesion
+    // Por cuestiones de simpliciidad se usara .equals para comparar usuarios y gmails mientras agregamos las contrasenias
+
+    public UsuarioLoginResponseDTO validarLogin(UsuarioLoginDTO loginDTO){
+        Optional<Usuarios> usuarioOpt = repo_usuarios.findByCorreo(loginDTO.getCorreo());
+
+        if (usuarioOpt.isEmpty()){
+            return new UsuarioLoginResponseDTO(false, "Usuario no encontrado", null);
+        }
+
+        Usuarios usuario = usuarioOpt.get();
+
+        if (!usuario.getContrasenia().equals(loginDTO.getContrasenia())){
+            return new UsuarioLoginResponseDTO(false, "Contrasenia incorrecta", null);
+        }
+
+        UsuarioResponseDTO responseDTO = new UsuarioResponseDTO(
+                usuario.getUsuarioId(),
+                usuario.getNombre(),
+                usuario.getApellido(),
+                usuario.getCorreo()
+        );
+        return new UsuarioLoginResponseDTO(true, "Login exitoso", responseDTO);
     }
 }
