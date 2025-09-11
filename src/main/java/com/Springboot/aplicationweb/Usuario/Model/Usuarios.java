@@ -24,4 +24,7 @@ public class Usuarios {
 
     @Column(name = "correo", nullable = false, unique = true, length = 150)
     private String correo;
+
+    @Column(name = "contrasenia", nullable = false)
+    private String contrasenia;
 }
