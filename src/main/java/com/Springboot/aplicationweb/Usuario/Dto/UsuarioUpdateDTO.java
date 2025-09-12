@@ -27,4 +27,8 @@ public class UsuarioUpdateDTO {
     @NotBlank(message = "El correo es obligatorio")
     @Email(message = "El email debe estar escrito correctamente")
     private String correo;
+
+    @NotNull
+    @NotBlank(message = "La contrasenia es obligatoria")
+    private String contrasenia;
 }
