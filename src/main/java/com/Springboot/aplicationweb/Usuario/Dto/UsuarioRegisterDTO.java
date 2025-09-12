@@ -1,6 +1,5 @@
 package com.Springboot.aplicationweb.Usuario.Dto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioCreateDTO {
+public class UsuarioRegisterDTO {
 
     @NotNull(message = "Solo esta permitido ingresar letras")
     @Pattern(regexp = "^[A-Za-z\\sáéíóúÁÉÍÓÚñÑ]+$")
