@@ -1,6 +1,8 @@
 package com.Springboot.aplicationweb.Usuario.Controllers;
 
-import com.Springboot.aplicationweb.Usuario.Dto.UsuarioCreateDTO;
+import com.Springboot.aplicationweb.Usuario.Dto.UsuarioLoginDTO;
+import com.Springboot.aplicationweb.Usuario.Dto.UsuarioLoginResponseDTO;
+import com.Springboot.aplicationweb.Usuario.Dto.UsuarioRegisterDTO;
 import com.Springboot.aplicationweb.Usuario.Model.Usuarios;
 import com.Springboot.aplicationweb.Usuario.Servicios.UsuarioService;
 import jakarta.validation.Valid;
@@ -16,18 +18,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/login")
 public class AutenticationController {
 
-
     @Autowired
     private UsuarioService serv_usuario;
 
+    @PostMapping
+    public ResponseEntity<UsuarioLoginResponseDTO> login(@Valid @RequestBody UsuarioLoginDTO loginDTO){
+        try {
+            UsuarioLoginResponseDTO response = serv_usuario.validarLogin(loginDTO);
+
+            if (response.isSuccess()){
+                return ResponseEntity.ok(response);
+            }else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+
+        }catch (Exception e){
+            UsuarioLoginResponseDTO errorResponse = new UsuarioLoginResponseDTO(
+                    false,
+                    "Error interno del servidor",
+                    null);
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
     // Aqui crearemos un usuario mediante la ventana de registro
     @PostMapping("/register")
-    public ResponseEntity<UsuarioCreateDTO> crearUsuario(@Valid @RequestBody UsuarioCreateDTO usuariodto){
+    public ResponseEntity<UsuarioRegisterDTO> crearUsuario(@Valid @RequestBody UsuarioRegisterDTO usuariodto){
         Usuarios insertar = serv_usuario.Crear(usuariodto);
-        UsuarioCreateDTO respDTO = new UsuarioCreateDTO(
+        UsuarioRegisterDTO respDTO = new UsuarioRegisterDTO(
                 insertar.getNombre(),
                 insertar.getApellido(),
-                insertar.getCorreo());
+                insertar.getCorreo(),
+                insertar.getContrasenia());
         return ResponseEntity.status(HttpStatus.CREATED).body(respDTO);
     }
 }
