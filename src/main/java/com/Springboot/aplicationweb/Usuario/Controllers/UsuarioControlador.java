@@ -1,14 +1,11 @@
 package com.Springboot.aplicationweb.Usuario.Controllers;
-import com.Springboot.aplicationweb.Usuario.Dto.UsuarioCreateDTO;
 import com.Springboot.aplicationweb.Usuario.Dto.UsuarioResponseDTO;
 import com.Springboot.aplicationweb.Usuario.Dto.UsuarioUpdateDTO;
-import com.Springboot.aplicationweb.Usuario.Model.Usuarios;
 import com.Springboot.aplicationweb.Usuario.Servicios.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,10 +47,9 @@ public class UsuarioControlador {
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioUpdateDTO> actualizarUsuario(@Valid @PathVariable int id, @RequestBody UsuarioUpdateDTO usuariodto){
         return serv_usuario.Actualizar(id, usuariodto)
-                .map(u -> new UsuarioUpdateDTO(u.getNombre(), u.getApellido(),u.getCorreo()))
+                .map(u -> new UsuarioUpdateDTO(u.getNombre(), u.getApellido(),u.getCorreo(), u.getContrasenia()))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-
     }
 
     // Aqui eliminaremos un usuario
