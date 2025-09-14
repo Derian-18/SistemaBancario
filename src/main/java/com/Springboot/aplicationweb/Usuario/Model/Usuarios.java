@@ -27,4 +27,14 @@ public class Usuarios {
 
     @Column(name = "contrasenia", nullable = false)
     private String contrasenia;
+
+    @Column(name = "TipoUsuario", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Rol rol;
+
+    public enum Rol {
+        CLIENTE,
+        EMPLEADO,
+        ADMIN
+    }
 }
