@@ -1,5 +1,6 @@
 package com.Springboot.aplicationweb.Usuario.Dto;
 
+import com.Springboot.aplicationweb.Usuario.Model.Usuarios;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,4 +33,10 @@ public class UsuarioResponseDTO {
     @NotBlank(message = "El correo es obligatorio")
     @Email(message = "El email debe estar escrito correctamente")
     private String correo;
+
+    // Esta es otra forma de hacerlo pero conviene mas usar .name en la clase de servicio por buenas practicas
+    // private Usuarios.Rol rol;
+    @NotNull
+    @NotBlank
+    private String Rol;
 }
