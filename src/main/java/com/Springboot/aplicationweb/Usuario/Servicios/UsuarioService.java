@@ -17,7 +17,7 @@ public class UsuarioService {
     @Autowired
     private UsuariosRepositorio repo_usuarios;
 
-    // Lo siguiente sirve para encriptar las contrasenias lo cual se hara uso de esto despues
+    // Lo siguiente sirve para encriptar las contrasenias lo cual se hara uso de esto después
 //    @Autowired
 //    prívate PasswordEncoder contraseniaEncoder;
 
@@ -66,14 +66,15 @@ public class UsuarioService {
         Usuarios usuario = usuarioOpt.get();
 
         if (!usuario.getContrasenia().equals(loginDTO.getContrasenia())){
-            return new UsuarioLoginResponseDTO(false, "Contrasenia incorrecta", null);
+            return new UsuarioLoginResponseDTO(false, "Contraseña incorrecta", null);
         }
 
         UsuarioResponseDTO responseDTO = new UsuarioResponseDTO(
                 usuario.getUsuarioId(),
                 usuario.getNombre(),
                 usuario.getApellido(),
-                usuario.getCorreo()
+                usuario.getCorreo(),
+                usuario.getRol().name()
         );
         return new UsuarioLoginResponseDTO(true, "Login exitoso", responseDTO);
     }
