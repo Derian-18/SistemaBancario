@@ -25,7 +25,7 @@ public class UsuarioControlador {
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listarTodos(){
         List<UsuarioResponseDTO> usuarios = serv_usuario.ListaUsuarios().stream()
-                .map(u -> new UsuarioResponseDTO(u.getUsuarioId(), u.getNombre(), u.getApellido(), u.getCorreo())).toList();
+                .map(u -> new UsuarioResponseDTO(u.getUsuarioId(), u.getNombre(), u.getApellido(), u.getCorreo(), u.getRol().name())).toList();
         return ResponseEntity.ok(usuarios);
     }
 
@@ -37,7 +37,8 @@ public class UsuarioControlador {
                         usuario.getUsuarioId(),
                         usuario.getNombre(),
                         usuario.getApellido(),
-                        usuario.getCorreo()
+                        usuario.getCorreo(),
+                        usuario.getRol().name()
                 ))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
