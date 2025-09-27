@@ -25,7 +25,11 @@ public class UsuarioControlador {
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listarTodos(){
         List<UsuarioResponseDTO> usuarios = serv_usuario.ListaUsuarios().stream()
-                .map(u -> new UsuarioResponseDTO(u.getUsuarioId(), u.getNombre(), u.getApellido(), u.getCorreo(), u.getRol().name())).toList();
+                .map(u -> new UsuarioResponseDTO(u.getUsuarioId(),
+                        u.getNombre(),
+                        u.getApellido(),
+                        u.getCorreo(),
+                        u.getRol().name())).toList();
         return ResponseEntity.ok(usuarios);
     }
 
@@ -48,7 +52,10 @@ public class UsuarioControlador {
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioUpdateDTO> actualizarUsuario(@Valid @PathVariable int id, @RequestBody UsuarioUpdateDTO usuariodto){
         return serv_usuario.Actualizar(id, usuariodto)
-                .map(u -> new UsuarioUpdateDTO(u.getNombre(), u.getApellido(),u.getCorreo(), u.getContrasenia()))
+                .map(u -> new UsuarioUpdateDTO(u.getNombre(),
+                        u.getApellido(),
+                        u.getCorreo(),
+                        u.getContrasenia()))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
