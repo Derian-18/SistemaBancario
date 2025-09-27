@@ -17,7 +17,7 @@ public class UsuarioService {
     @Autowired
     private UsuariosRepositorio repo_usuarios;
 
-    // Lo siguiente sirve para encriptar las contrasenias lo cual se hara uso de esto después
+    // Lo siguiente sirve para encriptar las contrasenias lo cual se hará uso de esto después
 //    @Autowired
 //    prívate PasswordEncoder contraseniaEncoder;
 
@@ -53,9 +53,10 @@ public class UsuarioService {
         repo_usuarios.deleteById(id);
     }
 
-    // Aqui ira el metodo para poder iniciar sesion
-    // Por cuestiones de simpliciidad se usara .equals para comparar usuarios y gmails mientras agregamos las contrasenias
+    // Aquí ira el método para poder iniciar sesión
+    // Por cuestiones de simplicidad se usara .equals para las contrasenias
 
+    // Aquí se está usando el método que esta en el repositorio
     public UsuarioLoginResponseDTO validarLogin(UsuarioLoginDTO loginDTO){
         Optional<Usuarios> usuarioOpt = repo_usuarios.findByCorreo(loginDTO.getCorreo());
 
