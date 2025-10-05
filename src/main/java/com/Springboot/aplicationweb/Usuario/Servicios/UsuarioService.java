@@ -1,5 +1,7 @@
 package com.Springboot.aplicationweb.Usuario.Servicios;
 
+import com.Springboot.aplicationweb.CuentaBancaria.Repositorios.CuentaBancariaRepositorio;
+import com.Springboot.aplicationweb.CuentaBancaria.Servicios.CuentaBancariaService;
 import com.Springboot.aplicationweb.Usuario.Dto.*;
 import com.Springboot.aplicationweb.Usuario.Model.Usuarios;
 import com.Springboot.aplicationweb.Usuario.Repositorios.UsuariosRepositorio;
@@ -17,9 +19,12 @@ public class UsuarioService {
     @Autowired
     private UsuariosRepositorio repo_usuarios;
 
+    @Autowired
+    private CuentaBancariaService cuentaBancariaService;
+
     // Lo siguiente sirve para encriptar las contrasenias lo cual se hará uso de esto después
-//    @Autowired
-//    prívate PasswordEncoder contraseniaEncoder;
+    //@Autowired
+    //prívate PasswordEncoder contraseniaEncoder;
 
     public List<Usuarios> ListaUsuarios(){
         return repo_usuarios.findAll();
@@ -36,7 +41,14 @@ public class UsuarioService {
         u.setApellido(usuario.getApellido());
         u.setCorreo(usuario.getCorreo());
         u.setContrasenia(usuario.getContrasenia());
-        return repo_usuarios.save(u);
+
+        // Aquí guardamos el usuario
+        Usuarios  usuarioGuardado = repo_usuarios.save(u);
+
+        // Aquí creamos automáticamente la cuenta bancaria
+        cuentaBancariaService.crearCuentaUsuario(usuarioGuardado);
+
+        return usuarioGuardado;
     }
 
     public Optional<Usuarios> Actualizar(int id, UsuarioUpdateDTO actualiza){
