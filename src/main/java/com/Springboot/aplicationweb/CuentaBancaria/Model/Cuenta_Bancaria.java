@@ -4,6 +4,7 @@ import com.Springboot.aplicationweb.Usuario.Model.Usuarios;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.math.BigDecimal;
 
@@ -19,8 +20,9 @@ public class Cuenta_Bancaria {
     private Integer cuenta_id;
 
     // Esta es la llave foránea
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "usuarioId", nullable = false)
+    @JsonBackReference
     private Usuarios usuarioId;
 
     @Column(name = "numeroCuenta", nullable = false)
