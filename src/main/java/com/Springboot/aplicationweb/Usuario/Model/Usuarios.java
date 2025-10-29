@@ -4,6 +4,7 @@ import com.Springboot.aplicationweb.CuentaBancaria.Model.Cuenta_Bancaria;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.Set;
 
@@ -20,8 +21,9 @@ public class Usuarios {
     private Integer usuarioId;
 
     // Esta es la llave foránea
-    @OneToMany(mappedBy = "usuarioId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Cuenta_Bancaria> cuentas_bancarias;
+    @OneToOne(mappedBy = "usuarioId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Cuenta_Bancaria cuentas_bancarias;
 
     @Column(name = "nombre", nullable = false, length = 100)
     private String  nombre;
