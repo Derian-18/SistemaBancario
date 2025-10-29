@@ -1,4 +1,5 @@
 package com.Springboot.aplicationweb.Usuario.Controllers;
+import com.Springboot.aplicationweb.Usuario.Dto.UsuarioGetDTO;
 import com.Springboot.aplicationweb.Usuario.Dto.UsuarioResponseDTO;
 import com.Springboot.aplicationweb.Usuario.Dto.UsuarioUpdateDTO;
 import com.Springboot.aplicationweb.Usuario.Servicios.UsuarioService;
@@ -23,26 +24,28 @@ public class UsuarioControlador {
 
     // Este GetMapping hace que se muestren todos los usuarios mediante el ResponseDTO
     @GetMapping
-    public ResponseEntity<List<UsuarioResponseDTO>> listarTodos(){
-        List<UsuarioResponseDTO> usuarios = serv_usuario.ListaUsuarios().stream()
-                .map(u -> new UsuarioResponseDTO(u.getUsuarioId(),
+    public ResponseEntity<List<UsuarioGetDTO>> listarTodos(){
+        List<UsuarioGetDTO> usuarios = serv_usuario.ListaUsuarios().stream()
+                .map(u -> new UsuarioGetDTO(u.getUsuarioId(),
                         u.getNombre(),
                         u.getApellido(),
                         u.getCorreo(),
-                        u.getRol().name())).toList();
+                        u.getRol(),
+                        u.getNumeroCuenta())).toList();
         return ResponseEntity.ok(usuarios);
     }
 
     // Aqui buscamos un usuario por el id
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> buscar(@Valid @PathVariable int id){
+    public ResponseEntity<UsuarioGetDTO> buscar(@Valid @PathVariable int id){
         return serv_usuario.BuscarId(id)
-                .map(usuario -> new UsuarioResponseDTO(
+                .map(usuario -> new UsuarioGetDTO(
                         usuario.getUsuarioId(),
                         usuario.getNombre(),
                         usuario.getApellido(),
                         usuario.getCorreo(),
-                        usuario.getRol().name()
+                        usuario.getRol(),
+                        usuario.getNumeroCuenta()
                 ))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
