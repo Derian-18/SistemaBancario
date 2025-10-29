@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -26,12 +27,33 @@ public class UsuarioService {
     //@Autowired
     //prívate PasswordEncoder contraseniaEncoder;
 
-    public List<Usuarios> ListaUsuarios(){
-        return repo_usuarios.findAll();
+    // Aqui lo que se hace es que muestren los usuarios
+    public List<UsuarioGetDTO> ListaUsuarios(){
+        return repo_usuarios.findAll().stream()
+                .map(u -> new UsuarioGetDTO(
+                        u.getUsuarioId(),
+                        u.getNombre(),
+                        u.getApellido(),
+                        u.getCorreo(),
+                        u.getRol().name(),
+                        (u.getCuentas_bancarias() != null) ? u.getCuentas_bancarias().getNumeroCuenta().toString() : null
+                ))
+                .collect(Collectors.toList());
     }
 
-    public Optional<Usuarios> BuscarId(int id){
-        return repo_usuarios.findById(id);
+    // Aqui los usuarios se muestran pero solo el id elegido
+    public Optional<UsuarioGetDTO> BuscarId(int id){
+        Usuarios u = repo_usuarios.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return Optional.of(new UsuarioGetDTO(
+                u.getUsuarioId(),
+                u.getNombre(),
+                u.getApellido(),
+                u.getCorreo(),
+                u.getRol().name(),
+                (u.getCuentas_bancarias() != null) ? u.getCuentas_bancarias().getNumeroCuenta() : null
+        ));
     }
 
     // Este se va a usar para registro de usuarios
@@ -65,10 +87,11 @@ public class UsuarioService {
         repo_usuarios.deleteById(id);
     }
 
-    // Aquí ira el método para poder iniciar sesión
+    /* Aquí ira el método para poder iniciar sesión*/
     // Por cuestiones de simplicidad se usara .equals para las contrasenias
 
     // Aquí se está usando el método que esta en el repositorio
+    // Recordar que aqui es el DTO de respuesta al LOGIN
     public UsuarioLoginResponseDTO validarLogin(UsuarioLoginDTO loginDTO){
         Optional<Usuarios> usuarioOpt = repo_usuarios.findByCorreo(loginDTO.getCorreo());
 
@@ -82,12 +105,13 @@ public class UsuarioService {
             return new UsuarioLoginResponseDTO(false, "Contraseña incorrecta", null);
         }
 
-        UsuarioResponseDTO responseDTO = new UsuarioResponseDTO(
+        UsuarioGetDTO responseDTO = new UsuarioGetDTO(
                 usuario.getUsuarioId(),
                 usuario.getNombre(),
                 usuario.getApellido(),
                 usuario.getCorreo(),
-                usuario.getRol().name()
+                usuario.getRol().name(),
+                (usuario.getCuentas_bancarias() != null) ? usuario.getCuentas_bancarias().getNumeroCuenta() : null
         );
         return new UsuarioLoginResponseDTO(true, "Login exitoso", responseDTO);
     }
